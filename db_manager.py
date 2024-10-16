@@ -109,10 +109,11 @@ class DbManager:
     def get_table_data(self, db_name, table_name):
         if db_name in self.databases:
             if table := self.databases[db_name].tables.get(table_name, None):
+                new_rows = {key: val.values for key, val in table.rows.items()}
                 return (
                     [Type.ID.value] + [field.ftype.value for field in table.schema.fields],
                     ['id'] + [field.name for field in table.schema.fields],
-                    table.rows,
+                    new_rows,
                 )
 
     def _fetch_table_data(self, db_name, table_name):
