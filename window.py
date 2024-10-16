@@ -254,7 +254,7 @@ def delete_duplicate_rows():
         messagebox.showerror("Database Error", f"Error deleting duplicates: {str(e)}")
 
 
-def run_gui():
+def run_gui(mode):
     global dbm, tree, main_table, entries, add_entries, add_record_frame, edit_frame, new_db_entry, new_table_entry, new_table_columns_entry
 
     root = tk.Tk()
@@ -320,8 +320,14 @@ def run_gui():
 
     create_add_fields()
 
-    dbm = DbClient()
-    dbm.run()
+    match mode:
+        case 'd':
+            dbm = DbManager()
+            dbm.load()
+        case 'c':
+            dbm = DbClient()
+            dbm.run()
+
     databases = dbm.fetch_databases_and_tables()
     for db_name, tables in databases.items():
         db_item = tree.insert("", "end", text=db_name, open=True)
