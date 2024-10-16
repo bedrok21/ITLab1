@@ -52,6 +52,7 @@ class Table:
         if _id is None:
             _id = str(uuid4())
         self.rows[_id] = row
+        return _id
 
     def update_row(self, row_index, new_data):
         if row_index not in self.rows.keys():

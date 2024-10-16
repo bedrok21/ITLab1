@@ -70,8 +70,9 @@ class DbManager:
         self._save_table_data(db_name, table_name)
 
     def insert_row(self, db_name, table_name, values):
-        self.databases[db_name].tables[table_name].insert_row(values)
+        _id = self.databases[db_name].tables[table_name].insert_row(values)
         self._save_table_data(db_name, table_name)
+        return _id
 
     def delete_row(self, db_name, table_name, _id):
         self.databases[db_name].tables[table_name].delete_row(_id)
