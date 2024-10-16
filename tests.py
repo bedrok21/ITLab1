@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import MagicMock
-from db_classes import Database, Type, Field, Table, Schema
+
+from db_classes import Database, Type, Field, Schema
 from db_manager import DbManager
 
 

@@ -57,6 +57,7 @@ class Table:
     def update_row(self, row_index, new_data):
         if row_index not in self.rows.keys():
             raise IndexError("Row index out of range.")
+        self.validate(new_data)
         self.rows[row_index].update(new_data)
 
     def delete_row(self, row_index):
@@ -85,8 +86,9 @@ class Table:
                     case Type.DATEINVL:
                         dates = col.split('-')
                         assert len(dates) == 2
-                        datetime.strptime(col[0], '%Y.%m.%d')
-                        datetime.strptime(col[1], '%Y.%m.%d')
+                        d1 = datetime.strptime(dates[0], '%Y.%m.%d')
+                        d2 = datetime.strptime(dates[1], '%Y.%m.%d')
+                        assert d1.timestamp() < d2.timestamp()
         except Exception as e:
             raise TypeError(e)
 

@@ -1,7 +1,8 @@
-import sqlite3
+import time
 import tkinter as tk
 from tkinter import ttk, messagebox
 from db_manager import DbManager
+from client import DbClient
 
 
 def load_table_data(db_name, table_name):
@@ -11,18 +12,14 @@ def load_table_data(db_name, table_name):
 
     try:
         _, columns, rows = dbm.get_table_data(db_name, table_name)
-
         main_table.delete(*main_table.get_children())
-
         main_table["columns"] = columns
-
         main_table["show"] = "headings"
         for col in main_table["columns"]:
             main_table.heading(col, text=col)
             main_table.column(col, anchor="center", width=100)
-
         for key, row in rows.items():
-            main_table.insert("", "end", values=[key] + row.values)
+            main_table.insert("", "end", values=[key] + row)
 
         create_add_fields()
 
@@ -91,7 +88,7 @@ def save_changes():
 
         messagebox.showinfo("Success", "Record updated successfully!")
 
-    except sqlite3.Error as e:
+    except Exception as e:
         messagebox.showerror("Database Error", f"Error updating record: {str(e)}")
 
 
@@ -123,7 +120,7 @@ def delete_record():
         dbm.delete_row(selected_db_name, selected_table_name, primary_key_value)        
         load_table_data(selected_db_name, selected_table_name)
         messagebox.showinfo("Success", "Record deleted successfully!")
-    except sqlite3.Error as e:
+    except Exception as e:
         messagebox.showerror("Database Error", f"Error deleting record: {str(e)}")
 
 
@@ -253,7 +250,7 @@ def delete_duplicate_rows():
         else:
             messagebox.showinfo("Info", "No duplicate rows found.")
 
-    except sqlite3.Error as e:
+    except Exception as e:
         messagebox.showerror("Database Error", f"Error deleting duplicates: {str(e)}")
 
 
@@ -323,8 +320,8 @@ def run_gui():
 
     create_add_fields()
 
-    dbm = DbManager()
-    dbm.load()
+    dbm = DbClient()
+    dbm.run()
     databases = dbm.fetch_databases_and_tables()
     for db_name, tables in databases.items():
         db_item = tree.insert("", "end", text=db_name, open=True)
